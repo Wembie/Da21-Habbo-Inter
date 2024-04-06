@@ -31,6 +31,6 @@ Las contribuciones son bienvenidas. Si encuentras algún error o tienes alguna s
 
 ## Créditos
 
-Desarrollado por _Acos_ y Wembie.
+Desarrollado por _Acos_ / Wembie.
 
 ¡Espero que disfrutes usando Da21 Habbo Inter!
