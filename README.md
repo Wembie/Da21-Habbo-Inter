@@ -22,8 +22,11 @@ Este es un proyecto de aplicación de escritorio desarrollado en Python con la b
 
 1. Una vez completada la instalación, ejecuta el archivo `Da21_Habbo_Inter.py` para iniciar la aplicación.
 2. Completa los saldos iniciales de los jugadores (Z0, Z1 y Z2) en sus respectivas casillas.
-3. Ingresa el monto del juego en la casilla correspondiente y haz clic en "Z1 gana" o "Z2 gana" para registrar el resultado.
-4. Utiliza los botones de "Reset", "Importar saldos" y "Exportar saldos" según sea necesario para administrar los registros.
+3. Si no marcas ni "Dinero Real" ni "USDT", el juego se realizará en créditos.
+4. Si marcas "Dinero Real", el juego se realizará en la moneda especificada como "Dinero Real".
+5. Si marcas "USDT", el juego se realizará en la moneda especificada como "USDT".
+6. Ingresa el monto del juego en la casilla correspondiente y haz clic en "Z1 gana" o "Z2 gana" para registrar el resultado.
+7. Utiliza los botones de "Reset", "Importar saldos" y "Exportar saldos" según sea necesario para administrar los registros.
 
 ## Contribución
 
