@@ -33,7 +33,7 @@ Este es un proyecto de aplicación de escritorio desarrollado en Python con la b
 Las contribuciones son bienvenidas. Si encuentras algún error o tienes alguna sugerencia de mejora, no dudes en abrir un issue o enviar un pull request.
 
 ## Donaciones:
-Cualquier donación es voluntaria y será muy apreciada para apoyar el desarrollo continuo de este proyecto.¡No dudes en contactarme en Telegram! Puedes encontrarme como @Wembie..
+Cualquier donación es voluntaria y será muy apreciada para apoyar el desarrollo continuo de este proyecto.¡No dudes en contactarme en Telegram! Puedes encontrarme como @Wembie.
 
 ## Créditos
 
