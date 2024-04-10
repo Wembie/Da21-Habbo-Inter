@@ -12,6 +12,8 @@ class CuentaApp:
         self.juego_var = tk.DoubleVar()
         self.dinero_real_var = tk.BooleanVar()
         self.usdt_var = tk.BooleanVar()  # Variable para controlar si se usa USDT
+        self.historial_partidas = []  # Historial de partidas
+        self.saldos_iniciales = {}  # Saldo inicial de cada jugador
 
         self.create_widgets()
         self.create_notepad()
@@ -46,15 +48,18 @@ class CuentaApp:
 
         tk.Button(self.root, text="Z1 gana", command=lambda: self.actualizar_saldos("z1")).grid(row=4, column=0, padx=10, pady=5)
         tk.Button(self.root, text="Z2 gana", command=lambda: self.actualizar_saldos("z2")).grid(row=4, column=1, padx=10, pady=5)
-        tk.Button(self.root, text="Reset", command=self.resetear).grid(row=5, columnspan=2, padx=10, pady=5)
+        
+        tk.Button(self.root, text="Historial", command=self.mostrar_historial).grid(row=5, columnspan=2, padx=10, pady=5)
+
+        tk.Button(self.root, text="Reset", command=self.resetear).grid(row=8, columnspan=2, padx=10, pady=5)
 
         buttons_frame = tk.Frame(self.root)
-        buttons_frame.grid(row=8, column=2, padx=10, pady=5)
+        buttons_frame.grid(row=9, column=2, padx=10, pady=5)
         
         tk.Button(buttons_frame, text="Importar saldos", command=self.importar_saldos).pack(side=tk.LEFT, padx=5)
         tk.Button(buttons_frame, text="Exportar saldos", command=self.exportar_saldos).pack(side=tk.LEFT, padx=5)
         
-        tk.Label(self.root, text="Developed By _Acos_ / Wembie").grid(row=8, column=0, columnspan=2)
+        tk.Label(self.root, text="Developed By _Acos_ / Wembie").grid(row=9, column=0, columnspan=2)
 
     def create_notepad(self):
         self.notepad_frame = tk.Frame(self.root)
@@ -93,6 +98,10 @@ class CuentaApp:
             else:
                 propina = self.calcular_propina(monto_juego)
 
+        saldo_z0_inicial = self.saldo_z0.get()
+        saldo_z1_inicial = self.saldo_z1.get()
+        saldo_z2_inicial = self.saldo_z2.get()
+
         if ganador == "z1":
             self.saldo_z0.set(round(self.saldo_z0.get() + propina, 2))
             self.saldo_z1.set(round(self.saldo_z1.get() + monto_juego - propina, 2))
@@ -105,6 +114,11 @@ class CuentaApp:
             self.saldo_z2.set(round(self.saldo_z2.get() - monto_juego, 2))
         elif ganador == "z2":
             self.saldo_z1.set(round(self.saldo_z1.get() - monto_juego, 2))
+
+        # Agregar la partida al historial
+        self.historial_partidas.append(f"Juego: {ganador}, Monto: {monto_juego}, Propina: {propina}, "
+                                       f"Saldo Inicial Z0: {saldo_z0_inicial}, Saldo Inicial Z1: {saldo_z1_inicial}, "
+                                       f"Saldo Inicial Z2: {saldo_z2_inicial}")
 
     def calcular_propina(self, monto_juego):
         if 5.0 <= monto_juego <= 9.0:
@@ -143,6 +157,10 @@ class CuentaApp:
         self.saldo_z1.set(0.0)
         self.saldo_z2.set(0.0)
         self.juego_var.set(0.0)
+        self.historial_partidas.clear()  # Limpiar historial al resetear
+
+    def mostrar_historial(self):
+        messagebox.showinfo("Historial de Partidas", "\n".join(self.historial_partidas))
 
     def importar_saldos(self):
         filename = filedialog.askopenfilename(filetypes=(("Archivos de texto", "*.txt"), ("Todos los archivos", "*.*")))
