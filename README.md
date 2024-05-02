@@ -11,6 +11,7 @@ Este es un proyecto de aplicación de escritorio desarrollado en Python con la b
 - Ofrece la opción de importar y exportar los saldos registrados.
 - Proporciona una interfaz de usuario intuitiva y fácil de usar.
 - Permite seleccionar el tipo de moneda a utilizar, incluyendo "Dinero Real", "USDT" y otras monedas.
+- Guarda el historial de todas las partidas jugadas con cada uno de los saldos.
 
 ## Instalación
 
@@ -27,13 +28,14 @@ Este es un proyecto de aplicación de escritorio desarrollado en Python con la b
 5. Si marcas "USDT", el juego se realizará en la moneda especificada como "USDT".
 6. Ingresa el monto del juego en la casilla correspondiente y haz clic en "Z1 gana" o "Z2 gana" para registrar el resultado.
 7. Utiliza los botones de "Reset", "Importar saldos" y "Exportar saldos" según sea necesario para administrar los registros.
+8. Utiliza el boton de "Historial" si necesitas verificar una saldo erroneo y/o si quieres ver el historial.
 
 ## Contribución
 
 Las contribuciones son bienvenidas. Si encuentras algún error o tienes alguna sugerencia de mejora, no dudes en abrir un issue o enviar un pull request.
 
 ## Donaciones:
-Cualquier donación es voluntaria y será muy apreciada para apoyar el desarrollo continuo de este proyecto.¡No dudes en contactarme en Telegram! Puedes encontrarme como @Wembie.
+Cualquier donación es voluntaria y será muy apreciada para apoyar el desarrollo continuo de este proyecto.¡No dudes en contactarme en Telegram! Puedes encontrarme como @P4bl1t0x.
 
 ## Créditos
 
