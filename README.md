@@ -21,7 +21,7 @@ Este es un proyecto de aplicación de escritorio desarrollado en Python con la b
 
 ## Foto
 
-![Habbo Da21](https://imgur.com/a/6ks384n)
+![Habbo Da21](https://i.imgur.com/PHTuzLk.png)
 
 ## Uso
 
