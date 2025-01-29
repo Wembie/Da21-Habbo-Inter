@@ -19,6 +19,10 @@ Este es un proyecto de aplicación de escritorio desarrollado en Python con la b
 2. Asegúrate de tener instalado Python en tu sistema. Puedes descargarlo desde [Python.org](https://www.python.org/).
 3. Abre una terminal o línea de comandos en la carpeta donde clonaste o descargaste el repositorio.
 
+## Foto
+
+![Habbo Da21](https://imgur.com/a/6ks384n)
+
 ## Uso
 
 1. Una vez completada la instalación, ejecuta el archivo `Da21_Habbo_Inter.py` para iniciar la aplicación.
