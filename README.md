@@ -36,7 +36,7 @@ Este es un proyecto de aplicación de escritorio desarrollado en Python con la b
 
 ## Video Explicativo
 
-Pronto
+[Video](https://www.youtube.com/watch?v=hJH18hSmNsw&t=23s&ab_channel=Wembie)
 
 ## Contribución
 
