@@ -34,12 +34,16 @@ Este es un proyecto de aplicación de escritorio desarrollado en Python con la b
 7. Utiliza los botones de "Reset", "Importar saldos" y "Exportar saldos" según sea necesario para administrar los registros.
 8. Utiliza el boton de "Historial" si necesitas verificar una saldo erroneo y/o si quieres ver el historial.
 
+## Video Explicativo
+
+Pronto
+
 ## Contribución
 
 Las contribuciones son bienvenidas. Si encuentras algún error o tienes alguna sugerencia de mejora, no dudes en abrir un issue o enviar un pull request.
 
 ## Donaciones:
-Cualquier donación es voluntaria y será muy apreciada para apoyar el desarrollo continuo de este proyecto.¡No dudes en contactarme en Telegram! Puedes encontrarme como @P4bl1t0x.
+Cualquier donación es voluntaria y será muy apreciada para apoyar el desarrollo continuo de este proyecto.¡No dudes en contactarme en Telegram! Puedes encontrarme como @Soy_Acos.
 
 ## Créditos
 
