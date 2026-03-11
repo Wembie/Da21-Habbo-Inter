@@ -16,15 +16,15 @@ COLORS: dict[str, str] = {
     "highlight":  "#252545",    # Hover/selection
     "muted":      "#7878A0",    # Muted text
     # Accent colors
-    "accent1":    "#FF6B8A",    # Pink/red — danger, reset (more vivid)
-    "accent2":    "#7EC8E3",    # Steel blue — info, historial
-    "accent3":    "#FFAA65",    # Orange-peach — IO, game amount
-    "accent4":    "#7FD99A",    # Mint green — success
-    "danger":     "#FF6B8A",    # Negative balance indicator
+    "accent1":    "#F43F5E",    # Rose/red — danger, reset
+    "accent2":    "#3B82F6",    # Blue — info, historial, cargar notas
+    "accent3":    "#F97316",    # Orange — IO, game amount
+    "accent4":    "#16A34A",    # Green — success, guardar notas
+    "danger":     "#F43F5E",    # Negative balance indicator
     # Player-specific colors
-    "inter":      "#C084FC",    # Purple — Inter  (more vivid)
-    "z1":         "#67E8F9",    # Cyan — Z1 (more vivid)
-    "z2":         "#FB7185",    # Rose/red — Z2 (more vivid)
+    "inter":      "#A855F7",    # Purple — Inter
+    "z1":         "#0891B2",    # Dark cyan — Z1 (legible con blanco)
+    "z2":         "#E11D48",    # Deep rose — Z2
 }
 
 CURRENCIES: list[str] = [
