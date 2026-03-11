@@ -36,6 +36,7 @@ class CuentaApp:
         self.game_var = tk.DoubleVar()
         self.real_money_var = tk.BooleanVar()
         self.usdt_var = tk.BooleanVar()
+        self.currency_var = tk.StringVar(value="COP")
         self.game_history = []
 
         self.title_font = font.Font(family="Segoe UI", size=14, weight="bold")
@@ -86,6 +87,7 @@ class CuentaApp:
                 self.name_z0.set(data.get("name_z0", "Inter"))
                 self.name_z1.set(data.get("name_z1", "Jugador 1"))
                 self.name_z2.set(data.get("name_z2", "Jugador 2"))
+                self.currency_var.set(data.get("currency", "ARS"))
                 self.game_history = data.get("history", [])
             except (json.JSONDecodeError, KeyError, OSError):
                 pass
@@ -100,6 +102,7 @@ class CuentaApp:
                 "name_z0": self.name_z0.get(),
                 "name_z1": self.name_z1.get(),
                 "name_z2": self.name_z2.get(),
+                "currency": self.currency_var.get(),
                 "history": self.game_history,
             }
             with open(self.AUTOSAVE_FILE, 'w', encoding='utf-8') as f:
@@ -136,6 +139,36 @@ class CuentaApp:
 
         self.create_styled_checkbox(payment_frame, "Dinero Real", self.real_money_var, 0, 0)
         self.create_styled_checkbox(payment_frame, "USDT", self.usdt_var, 0, 1)
+
+        currency_frame = ttk.Frame(payment_frame)
+        currency_frame.grid(row=1, column=0, columnspan=2, padx=10, pady=(0, 6), sticky="w")
+
+        tk.Label(currency_frame, text="Moneda:", font=self.text_font,
+                 fg=self.colors["foreground"], bg=self.colors["panel"]
+                 ).pack(side=tk.LEFT, padx=(0, 6))
+
+        currencies = [
+            "AED", "AFN", "ALL", "AMD", "ANG", "AOA", "ARS", "AUD", "AWG", "AZN",
+            "BAM", "BBD", "BDT", "BGN", "BHD", "BIF", "BMD", "BND", "BOB", "BRL",
+            "BSD", "BTN", "BWP", "BYN", "BZD", "CAD", "CDF", "CHF", "CLP", "CNY",
+            "COP", "CRC", "CUP", "CVE", "CZK", "DJF", "DKK", "DOP", "DZD", "EGP",
+            "ERN", "ETB", "EUR", "FJD", "FKP", "GBP", "GEL", "GHS", "GIP", "GMD",
+            "GNF", "GTQ", "GYD", "HKD", "HNL", "HTG", "HUF", "IDR", "ILS", "INR",
+            "IQD", "IRR", "ISK", "JMD", "JOD", "JPY", "KES", "KGS", "KHR", "KMF",
+            "KRW", "KWD", "KYD", "KZT", "LAK", "LBP", "LKR", "LRD", "LSL", "LYD",
+            "MAD", "MDL", "MGA", "MKD", "MMK", "MNT", "MOP", "MRU", "MUR", "MVR",
+            "MWK", "MXN", "MYR", "MZN", "NAD", "NGN", "NIO", "NOK", "NPR", "NZD",
+            "OMR", "PAB", "PEN", "PGK", "PHP", "PKR", "PLN", "PYG", "QAR", "RON",
+            "RSD", "RUB", "RWF", "SAR", "SBD", "SCR", "SDG", "SEK", "SGD", "SHP",
+            "SOS", "SRD", "SSP", "STN", "SYP", "SZL", "THB", "TJS", "TMT", "TND",
+            "TOP", "TRY", "TTD", "TWD", "TZS", "UAH", "UGX", "USD", "UYU", "UZS",
+            "VES", "VND", "VUV", "WST", "XAF", "XCD", "XOF", "XPF", "YER", "ZAR",
+            "ZMW", "ZWL",
+        ]
+        self.currency_combo = ttk.Combobox(currency_frame, textvariable=self.currency_var,
+                                           values=currencies, state="disabled",
+                                           font=self.text_font, width=6)
+        self.currency_combo.pack(side=tk.LEFT)
 
         self.create_section_title(main_frame, "RESULTADO", 4, 0, colspan=2)
 
@@ -318,8 +351,8 @@ class CuentaApp:
                            relief=tk.FLAT, borderwidth=0, padx=15, pady=8)
         button.grid(row=row, column=col, padx=5, pady=5, sticky="ew")
 
-        button.bind("<Enter>", lambda e, b=button, c=color: self.on_hover(b, c))
-        button.bind("<Leave>", lambda e, b=button, c=color: self.on_leave(b, c))
+        button.bind("<Enter>", lambda _, b=button, c=color: self.on_hover(b, c))
+        button.bind("<Leave>", lambda _, b=button, c=color: self.on_leave(b, c))
 
         return button
 
@@ -369,6 +402,7 @@ class CuentaApp:
             self.usdt_var.set(False)
         elif clicked_var is self.usdt_var and self.usdt_var.get():
             self.real_money_var.set(False)
+        self.currency_combo.config(state="readonly" if self.real_money_var.get() else "disabled")
 
     def update_balances(self, winner):
         try:
@@ -412,8 +446,8 @@ class CuentaApp:
             payment_method = "USDT"
             currency = "USDT"
         elif self.real_money_var.get():
-            payment_method = "Dinero Real"
-            currency = "$"
+            currency = self.currency_var.get()
+            payment_method = f"Dinero Real ({currency})"
         else:
             payment_method = "Créditos Habbo"
             currency = "C"
@@ -703,10 +737,10 @@ class CuentaApp:
         )
         no_button.grid(row=0, column=1, padx=5, sticky="w")
 
-        yes_button.bind("<Enter>", lambda e, b=yes_button, c=self.colors["accent4"]: self.on_hover(b, c))
-        yes_button.bind("<Leave>", lambda e, b=yes_button, c=self.colors["accent4"]: self.on_leave(b, c))
-        no_button.bind("<Enter>", lambda e, b=no_button, c=self.colors["accent1"]: self.on_hover(b, c))
-        no_button.bind("<Leave>", lambda e, b=no_button, c=self.colors["accent1"]: self.on_leave(b, c))
+        yes_button.bind("<Enter>", lambda _, b=yes_button, c=self.colors["accent4"]: self.on_hover(b, c))
+        yes_button.bind("<Leave>", lambda _, b=yes_button, c=self.colors["accent4"]: self.on_leave(b, c))
+        no_button.bind("<Enter>", lambda _, b=no_button, c=self.colors["accent1"]: self.on_hover(b, c))
+        no_button.bind("<Leave>", lambda _, b=no_button, c=self.colors["accent1"]: self.on_leave(b, c))
 
         dialog.wait_window()
         return result[0]
@@ -748,8 +782,8 @@ class CuentaApp:
         )
         ok_button.pack(pady=20)
 
-        ok_button.bind("<Enter>", lambda e, b=ok_button, c=accent_color: self.on_hover(b, c))
-        ok_button.bind("<Leave>", lambda e, b=ok_button, c=accent_color: self.on_leave(b, c))
+        ok_button.bind("<Enter>", lambda _, b=ok_button, c=accent_color: self.on_hover(b, c))
+        ok_button.bind("<Leave>", lambda _, b=ok_button, c=accent_color: self.on_leave(b, c))
 
 
 if __name__ == "__main__":
