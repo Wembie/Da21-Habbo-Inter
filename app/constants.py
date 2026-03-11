@@ -20,11 +20,11 @@ COLORS: dict[str, str] = {
     "accent2":    "#3B82F6",    # Blue — info, historial, cargar notas
     "accent3":    "#F97316",    # Orange — IO, game amount
     "accent4":    "#16A34A",    # Green — success, guardar notas
-    "danger":     "#F43F5E",    # Negative balance indicator
+    "danger":     "#EF4444",    # Negative balance — rojo vivo, distinto de todos los jugadores
     # Player-specific colors
     "inter":      "#A855F7",    # Purple — Inter
-    "z1":         "#0891B2",    # Dark cyan — Z1 (legible con blanco)
-    "z2":         "#E11D48",    # Deep rose — Z2
+    "z1":         "#0891B2",    # Dark cyan — Z1
+    "z2":         "#EC4899",    # Hot pink/fuchsia — Z2 (no rojo, para que el danger resalte)
 }
 
 CURRENCIES: list[str] = [

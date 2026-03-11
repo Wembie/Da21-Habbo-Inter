@@ -302,7 +302,7 @@ class ControlsPanel:
             f"M\u00e9todo: {payment_method}\n"
             f"Monto: {game_amount} {currency}\n"
             f"Propina: {tip} {currency}\n"
-            f"Saldos: {n0}(Inter)={new_z0}, {n1}(Z1)={new_z1}, {n2}(Z2)={new_z2}"
+            f"Saldos [{currency}]: {n0}(Inter)={new_z0}, {n1}(Z1)={new_z1}, {n2}(Z2)={new_z2}"
         )
 
         # Update state and balances — done all at once before notifying
