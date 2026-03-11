@@ -2,51 +2,103 @@
 
 ¡Bienvenido a Da21 Habbo Inter!
 
-Este es un proyecto de aplicación de escritorio desarrollado en Python con la biblioteca Tkinter. La aplicación proporciona una manera sencilla de llevar un registro de los saldos de tres jugadores en un juego estilo Habbo (Z0, Z1 y Z2) y registrar los montos de juego, actualizando automáticamente los saldos según el resultado.
+Aplicación de escritorio desarrollada en Python con Tkinter para llevar el registro de saldos y partidas entre un intermediario (Inter) y dos jugadores (Z1, Z2) en juegos estilo Habbo.
 
 ## Funcionalidades
 
-- Permite llevar un registro de los saldos de tres jugadores (Z0, Z1 y Z2).
-- Permite registrar montos de juego y actualizar los saldos de acuerdo al resultado (ganador).
-- Ofrece la opción de importar y exportar los saldos registrados.
-- Proporciona una interfaz de usuario intuitiva y fácil de usar.
-- Permite seleccionar el tipo de moneda a utilizar, incluyendo "Dinero Real", "USDT" y otras monedas.
-- Guarda el historial de todas las partidas jugadas con cada uno de los saldos.
+- Nombres personalizables para el Inter y cada jugador
+- Registro de saldos en tiempo real con actualización automática según el resultado
+- Tres modos de pago: **Créditos Habbo**, **Dinero Real** (con selector de moneda) y **USDT**
+- Selector de moneda con todas las divisas ISO 4217 (~160 monedas)
+- Cálculo automático de propina según el monto jugado
+- Historial completo de partidas con timestamp y método de pago
+- Autosave automático al cerrar/resetear (se restaura al reabrir)
+- Exportación e importación de saldos e historial en `.txt`
+- Bloc de notas personal con guardado y carga desde archivo
+- Interfaz oscura moderna con efectos hover en botones
+
+## Estructura del proyecto
+
+```
+Da21-Habbo-Inter/
+├── main.py
+├── pyproject.toml
+├── .gitignore
+└── app/
+    ├── constants.py           # Colores, monedas, strings globales
+    ├── models/
+    │   ├── game_state.py      # Dataclass GameState
+    │   └── tip_calculator.py  # Cálculo de propinas
+    ├── services/
+    │   └── persistence.py     # Autosave (carga/guarda JSON)
+    └── ui/
+        ├── theme.py           # Fuentes y estilos ttk
+        ├── widgets.py         # Factory functions de widgets
+        ├── dialogs.py         # Diálogos y ventana de historial
+        ├── app.py             # Orquestador principal
+        └── panels/
+            ├── controls_panel.py  # Panel izquierdo (saldos, juego, acciones)
+            └── notepad_panel.py   # Panel derecho (notepad + notas personales)
+```
 
 ## Instalación
 
-1. Clona o descarga este repositorio en tu máquina local.
-2. Asegúrate de tener instalado Python en tu sistema. Puedes descargarlo desde [Python.org](https://www.python.org/).
-3. Abre una terminal o línea de comandos en la carpeta donde clonaste o descargaste el repositorio.
+### Con UV (recomendado)
+
+```bash
+# Instalar UV si no lo tenés
+pip install uv
+
+# Clonar el repositorio
+git clone https://github.com/tu-usuario/Da21-Habbo-Inter.git
+cd Da21-Habbo-Inter
+
+# Crear entorno e instalar dependencias
+uv sync
+```
+
+### Con Python estándar
+
+```bash
+git clone https://github.com/tu-usuario/Da21-Habbo-Inter.git
+cd Da21-Habbo-Inter
+python main.py
+```
+
+> Requiere Python 3.10 o superior. No tiene dependencias externas (solo stdlib).
+
+## Uso
+
+```bash
+python main.py
+```
+
+1. Editá los nombres del Inter, Jugador 1 y Jugador 2 directamente en los campos de la interfaz
+2. Ingresá los saldos iniciales de cada uno
+3. Seleccioná el tipo de pago:
+   - Sin marcar → **Créditos Habbo** (tabla de propinas fija)
+   - **Dinero Real** → elegí la moneda en el selector (COP por defecto)
+   - **USDT** → propina calculada en dólares
+4. Ingresá el monto del juego y presioná **Z1 GANA** o **Z2 GANA**
+5. Usá **HISTORIAL** para ver y exportar todas las partidas
+6. Usá **EXPORTAR SALDOS** para guardar el estado actual en un `.txt`
 
 ## Foto
 
 ![Habbo Da21](https://i.imgur.com/pYbbNuz.png)
 
-## Uso
-
-1. Una vez completada la instalación, ejecuta el archivo `Da21_Habbo_Inter.py` para iniciar la aplicación.
-2. Completa los saldos iniciales de los jugadores (Z0, Z1 y Z2) en sus respectivas casillas.
-3. Si no marcas ni "Dinero Real" ni "USDT", el juego se realizará en créditos.
-4. Si marcas "Dinero Real", el juego se realizará en la moneda especificada como "Dinero Real".
-5. Si marcas "USDT", el juego se realizará en la moneda especificada como "USDT".
-6. Ingresa el monto del juego en la casilla correspondiente y haz clic en "Z1 gana" o "Z2 gana" para registrar el resultado.
-7. Utiliza los botones de "Reset", "Importar saldos" y "Exportar saldos" según sea necesario para administrar los registros.
-8. Utiliza el boton de "Historial" si necesitas verificar una saldo erroneo y/o si quieres ver el historial.
-
 ## Video Explicativo
 
-[Video](https://www.youtube.com/watch?v=hJH18hSmNsw&t=23s&ab_channel=Wembie)
+[Ver en YouTube](https://www.youtube.com/watch?v=hJH18hSmNsw&t=23s&ab_channel=Wembie)
 
 ## Contribución
 
-Las contribuciones son bienvenidas. Si encuentras algún error o tienes alguna sugerencia de mejora, no dudes en abrir un issue o enviar un pull request.
+Las contribuciones son bienvenidas. Si encontrás algún error o tenés alguna sugerencia, abrí un issue o enviá un pull request.
 
-## Donaciones:
-Cualquier donación es voluntaria y será muy apreciada para apoyar el desarrollo continuo de este proyecto.¡No dudes en contactarme en Telegram! Puedes encontrarme como @Soy_Acos.
+## Donaciones
+
+Cualquier donación es voluntaria y muy apreciada. ¡Podés contactarme en Telegram como **@Soy_Acos**!
 
 ## Créditos
 
-Desarrollado por _Acos_ / Wembie.
-
-¡Espero que disfrutes usando Da21 Habbo Inter!
+Desarrollado por **_Acos_ / Wembie**.
