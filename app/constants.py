@@ -6,15 +6,25 @@ NOTES_PLACEHOLDER = (
 )
 
 COLORS: dict[str, str] = {
-    "background": "#202A44",
-    "foreground": "#FFFFFF",
-    "accent1": "#FF5F5D",
-    "accent2": "#3BBFEF",
-    "accent3": "#FFD166",
-    "accent4": "#06D6A0",
-    "panel": "#2A3655",
-    "border": "#3BBFEF",
-    "input": "#2F3B5C",
+    # Base surfaces
+    "background": "#111120",    # Deep dark navy
+    "foreground": "#E2E8F8",    # Clean white text
+    "panel":      "#191930",    # Panel bg — slightly blue-dark
+    "card":       "#22223E",    # Inner card — clearly distinct from panel
+    "input":      "#0E0E22",    # Input fields — deepest
+    "border":     "#2E2E58",    # Borders — visible but subtle
+    "highlight":  "#252545",    # Hover/selection
+    "muted":      "#7878A0",    # Muted text
+    # Accent colors
+    "accent1":    "#FF6B8A",    # Pink/red — danger, reset (more vivid)
+    "accent2":    "#7EC8E3",    # Steel blue — info, historial
+    "accent3":    "#FFAA65",    # Orange-peach — IO, game amount
+    "accent4":    "#7FD99A",    # Mint green — success
+    "danger":     "#FF6B8A",    # Negative balance indicator
+    # Player-specific colors
+    "inter":      "#C084FC",    # Purple — Inter  (more vivid)
+    "z1":         "#67E8F9",    # Cyan — Z1 (more vivid)
+    "z2":         "#FB7185",    # Rose/red — Z2 (more vivid)
 }
 
 CURRENCIES: list[str] = [
