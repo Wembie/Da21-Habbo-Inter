@@ -6,7 +6,7 @@ import os
 
 
 class CuentaApp:
-    PLACEHOLDER_NOTAS = "Escribe tus notas personales aquí...\n\nPuedes guardar y cargar tus notas con los botones de abajo."
+    NOTES_PLACEHOLDER = "Escribe tus notas personales aquí...\n\nPuedes guardar y cargar tus notas con los botones de abajo."
     AUTOSAVE_FILE = "da21_autosave.json"
 
     def __init__(self, root):
@@ -27,16 +27,16 @@ class CuentaApp:
             "input": "#2F3B5C",
         }
 
-        self.saldo_z0 = tk.DoubleVar()
-        self.saldo_z1 = tk.DoubleVar()
-        self.saldo_z2 = tk.DoubleVar()
-        self.nombre_z0 = tk.StringVar(value="Inter")
-        self.nombre_z1 = tk.StringVar(value="Jugador 1")
-        self.nombre_z2 = tk.StringVar(value="Jugador 2")
-        self.juego_var = tk.DoubleVar()
-        self.dinero_real_var = tk.BooleanVar()
+        self.balance_z0 = tk.DoubleVar()
+        self.balance_z1 = tk.DoubleVar()
+        self.balance_z2 = tk.DoubleVar()
+        self.name_z0 = tk.StringVar(value="Inter")
+        self.name_z1 = tk.StringVar(value="Jugador 1")
+        self.name_z2 = tk.StringVar(value="Jugador 2")
+        self.game_var = tk.DoubleVar()
+        self.real_money_var = tk.BooleanVar()
         self.usdt_var = tk.BooleanVar()
-        self.historial_partidas = []
+        self.game_history = []
 
         self.title_font = font.Font(family="Segoe UI", size=14, weight="bold")
         self.header_font = font.Font(family="Segoe UI", size=12, weight="bold")
@@ -62,8 +62,8 @@ class CuentaApp:
         self.create_widgets()
         self.create_notepad_section()
         self.center_window()
-        self.cargar_autosave()
-        self.actualizar_notepad()
+        self.load_autosave()
+        self.update_notepad()
 
     def center_window(self):
         """Center the main window on screen"""
@@ -74,33 +74,33 @@ class CuentaApp:
         y = (self.root.winfo_screenheight() // 2) - (height // 2)
         self.root.geometry(f"{width}x{height}+{x}+{y}")
 
-    def cargar_autosave(self):
+    def load_autosave(self):
         """Load autosaved state if available"""
         if os.path.exists(self.AUTOSAVE_FILE):
             try:
                 with open(self.AUTOSAVE_FILE, 'r', encoding='utf-8') as f:
                     data = json.load(f)
-                self.saldo_z0.set(data.get("z0", 0.0))
-                self.saldo_z1.set(data.get("z1", 0.0))
-                self.saldo_z2.set(data.get("z2", 0.0))
-                self.nombre_z0.set(data.get("nombre_z0", "Inter"))
-                self.nombre_z1.set(data.get("nombre_z1", "Jugador 1"))
-                self.nombre_z2.set(data.get("nombre_z2", "Jugador 2"))
-                self.historial_partidas = data.get("historial", [])
+                self.balance_z0.set(data.get("z0", 0.0))
+                self.balance_z1.set(data.get("z1", 0.0))
+                self.balance_z2.set(data.get("z2", 0.0))
+                self.name_z0.set(data.get("name_z0", "Inter"))
+                self.name_z1.set(data.get("name_z1", "Jugador 1"))
+                self.name_z2.set(data.get("name_z2", "Jugador 2"))
+                self.game_history = data.get("history", [])
             except (json.JSONDecodeError, KeyError, OSError):
                 pass
 
-    def guardar_autosave(self):
+    def save_autosave(self):
         """Save current state automatically"""
         try:
             data = {
-                "z0": self.saldo_z0.get(),
-                "z1": self.saldo_z1.get(),
-                "z2": self.saldo_z2.get(),
-                "nombre_z0": self.nombre_z0.get(),
-                "nombre_z1": self.nombre_z1.get(),
-                "nombre_z2": self.nombre_z2.get(),
-                "historial": self.historial_partidas,
+                "z0": self.balance_z0.get(),
+                "z1": self.balance_z1.get(),
+                "z2": self.balance_z2.get(),
+                "name_z0": self.name_z0.get(),
+                "name_z1": self.name_z1.get(),
+                "name_z2": self.name_z2.get(),
+                "history": self.game_history,
             }
             with open(self.AUTOSAVE_FILE, 'w', encoding='utf-8') as f:
                 json.dump(data, f, ensure_ascii=False, indent=2)
@@ -120,21 +120,21 @@ class CuentaApp:
         balance_frame.grid(row=0, column=0, columnspan=2, sticky="ew", pady=5)
 
         self.create_section_title(balance_frame, "SALDOS", 0, 0, colspan=2)
-        self.create_player_row(balance_frame, "(Inter)", self.nombre_z0, self.saldo_z0, 1)
-        self.create_player_row(balance_frame, "(Z1)", self.nombre_z1, self.saldo_z1, 2)
-        self.create_player_row(balance_frame, "(Z2)", self.nombre_z2, self.saldo_z2, 3)
+        self.create_player_row(balance_frame, "(Inter)", self.name_z0, self.balance_z0, 1)
+        self.create_player_row(balance_frame, "(Z1)", self.name_z1, self.balance_z1, 2)
+        self.create_player_row(balance_frame, "(Z2)", self.name_z2, self.balance_z2, 3)
 
-        self.saldo_z0.set(0.0)
-        self.saldo_z1.set(0.0)
-        self.saldo_z2.set(0.0)
+        self.balance_z0.set(0.0)
+        self.balance_z1.set(0.0)
+        self.balance_z2.set(0.0)
 
         self.create_section_title(main_frame, "JUEGO", 1, 0, colspan=2)
-        self.create_label_entry(main_frame, "Monto del juego:", self.juego_var, 2, 0, colspan=2)
+        self.create_label_entry(main_frame, "Monto del juego:", self.game_var, 2, 0, colspan=2)
 
         payment_frame = ttk.LabelFrame(main_frame, text="TIPO DE PAGO", style="TLabelframe")
         payment_frame.grid(row=3, column=0, columnspan=2, sticky="ew", padx=5, pady=10)
 
-        self.create_styled_checkbox(payment_frame, "Dinero Real", self.dinero_real_var, 0, 0)
+        self.create_styled_checkbox(payment_frame, "Dinero Real", self.real_money_var, 0, 0)
         self.create_styled_checkbox(payment_frame, "USDT", self.usdt_var, 0, 1)
 
         self.create_section_title(main_frame, "RESULTADO", 4, 0, colspan=2)
@@ -144,9 +144,9 @@ class CuentaApp:
         game_frame.columnconfigure(0, weight=1)
         game_frame.columnconfigure(1, weight=1)
 
-        self.create_styled_button(game_frame, "Z1 GANA", lambda: self.actualizar_saldos("z1"),
+        self.create_styled_button(game_frame, "Z1 GANA", lambda: self.update_balances("z1"),
                                   0, 0, color=self.colors["accent2"])
-        self.create_styled_button(game_frame, "Z2 GANA", lambda: self.actualizar_saldos("z2"),
+        self.create_styled_button(game_frame, "Z2 GANA", lambda: self.update_balances("z2"),
                                   0, 1, color=self.colors["accent2"])
 
         self.create_section_title(main_frame, "ACCIONES", 6, 0, colspan=2)
@@ -156,9 +156,9 @@ class CuentaApp:
         action_frame.columnconfigure(0, weight=1)
         action_frame.columnconfigure(1, weight=1)
 
-        self.create_styled_button(action_frame, "HISTORIAL", self.mostrar_historial,
+        self.create_styled_button(action_frame, "HISTORIAL", self.show_history,
                                   0, 0, color=self.colors["accent4"])
-        self.create_styled_button(action_frame, "RESET", self.resetear,
+        self.create_styled_button(action_frame, "RESET", self.reset,
                                   0, 1, color=self.colors["accent1"])
 
         io_frame = ttk.Frame(main_frame)
@@ -166,9 +166,9 @@ class CuentaApp:
         io_frame.columnconfigure(0, weight=1)
         io_frame.columnconfigure(1, weight=1)
 
-        self.create_styled_button(io_frame, "IMPORTAR SALDOS", self.importar_saldos,
+        self.create_styled_button(io_frame, "IMPORTAR SALDOS", self.import_balances,
                                   0, 0, color=self.colors["accent3"])
-        self.create_styled_button(io_frame, "EXPORTAR SALDOS", self.exportar_saldos,
+        self.create_styled_button(io_frame, "EXPORTAR SALDOS", self.export_balances,
                                   0, 1, color=self.colors["accent3"])
 
         credit_label = tk.Label(main_frame, text="Developed By _Acos_ / Wembie",
@@ -182,8 +182,8 @@ class CuentaApp:
         notepad_container.rowconfigure(1, weight=1)
         notepad_container.columnconfigure(0, weight=1)
 
-        self.create_notepad_frame(notepad_container, "SALDOS", 0, "saldos")
-        self.create_notepad_frame(notepad_container, "NOTAS PERSONALES", 1, "notas")
+        self.create_notepad_frame(notepad_container, "SALDOS", 0, "balances")
+        self.create_notepad_frame(notepad_container, "NOTAS PERSONALES", 1, "notes")
 
     def create_notepad_frame(self, parent, title, row, notepad_type):
         notepad_frame = ttk.LabelFrame(parent, text=title, style="TLabelframe")
@@ -206,7 +206,7 @@ class CuentaApp:
         scrollbar.grid(row=0, column=1, sticky="ns")
         notepad.config(yscrollcommand=scrollbar.set)
 
-        if notepad_type == "notas":
+        if notepad_type == "notes":
             self.personal_notepad = notepad
 
             buttons_frame = ttk.Frame(notepad_frame)
@@ -214,29 +214,28 @@ class CuentaApp:
             buttons_frame.columnconfigure(0, weight=1)
             buttons_frame.columnconfigure(1, weight=1)
 
-            self.create_styled_button(buttons_frame, "GUARDAR NOTAS", self.guardar_notas_personales,
+            self.create_styled_button(buttons_frame, "GUARDAR NOTAS", self.save_personal_notes,
                                       0, 0, color=self.colors["accent4"])
-            self.create_styled_button(buttons_frame, "CARGAR NOTAS", self.cargar_notas_personales,
+            self.create_styled_button(buttons_frame, "CARGAR NOTAS", self.load_personal_notes,
                                       0, 1, color=self.colors["accent3"])
 
-            # Placeholder behavior
-            self.personal_notepad.insert(tk.END, self.PLACEHOLDER_NOTAS)
+            self.personal_notepad.insert(tk.END, self.NOTES_PLACEHOLDER)
             self.personal_notepad.config(fg="#888888")
-            self.personal_notepad.bind("<FocusIn>", self._on_notas_focus_in)
-            self.personal_notepad.bind("<FocusOut>", self._on_notas_focus_out)
+            self.personal_notepad.bind("<FocusIn>", self._on_notes_focus_in)
+            self.personal_notepad.bind("<FocusOut>", self._on_notes_focus_out)
         else:
             self.notepad = notepad
 
-    def _on_notas_focus_in(self, _):
+    def _on_notes_focus_in(self, _):
         """Clear placeholder text when focused"""
-        if self.personal_notepad.get("1.0", tk.END).strip() == self.PLACEHOLDER_NOTAS.strip():
+        if self.personal_notepad.get("1.0", tk.END).strip() == self.NOTES_PLACEHOLDER.strip():
             self.personal_notepad.delete("1.0", tk.END)
             self.personal_notepad.config(fg=self.colors["foreground"])
 
-    def _on_notas_focus_out(self, _):
+    def _on_notes_focus_out(self, _):
         """Restore placeholder if empty"""
         if not self.personal_notepad.get("1.0", tk.END).strip():
-            self.personal_notepad.insert(tk.END, self.PLACEHOLDER_NOTAS)
+            self.personal_notepad.insert(tk.END, self.NOTES_PLACEHOLDER)
             self.personal_notepad.config(fg="#888888")
 
     def create_section_title(self, parent, text, row, col, colspan=1):
@@ -245,7 +244,7 @@ class CuentaApp:
                          pady=5)
         title.grid(row=row, column=col, columnspan=colspan, sticky="w")
 
-    def create_player_row(self, parent, tag, nombre_var, saldo_var, row):
+    def create_player_row(self, parent, tag, name_var, balance_var, row):
         """Create a row with an editable name field and a balance field"""
         frame = ttk.Frame(parent)
         frame.grid(row=row, column=0, columnspan=2, sticky="ew", pady=2)
@@ -256,7 +255,7 @@ class CuentaApp:
                  fg=self.colors["accent3"], bg=self.colors["panel"], anchor="w"
                  ).grid(row=0, column=0, padx=(5, 2), pady=2, sticky="w")
 
-        tk.Entry(frame, textvariable=nombre_var, font=self.text_font,
+        tk.Entry(frame, textvariable=name_var, font=self.text_font,
                  bg=self.colors["input"], fg=self.colors["foreground"],
                  insertbackground=self.colors["foreground"],
                  relief=tk.FLAT, bd=2, width=12
@@ -266,14 +265,14 @@ class CuentaApp:
                  fg=self.colors["foreground"], bg=self.colors["panel"], anchor="w"
                  ).grid(row=0, column=2, padx=(5, 2), pady=2, sticky="w")
 
-        tk.Entry(frame, textvariable=saldo_var, font=self.text_font,
+        tk.Entry(frame, textvariable=balance_var, font=self.text_font,
                  bg=self.colors["input"], fg=self.colors["foreground"],
                  insertbackground=self.colors["foreground"],
                  relief=tk.FLAT, bd=2
                  ).grid(row=0, column=3, padx=5, pady=2, sticky="ew")
 
-        saldo_var.trace_add("write", self.actualizar_notepad)
-        nombre_var.trace_add("write", self.actualizar_notepad)
+        balance_var.trace_add("write", self.update_notepad)
+        name_var.trace_add("write", self.update_notepad)
 
     def create_label_entry(self, parent, text, variable, row, col, colspan=1):
         frame = ttk.Frame(parent)
@@ -290,9 +289,6 @@ class CuentaApp:
                          insertbackground=self.colors["foreground"],
                          relief=tk.FLAT, bd=2)
         entry.grid(row=0, column=1, padx=5, pady=2, sticky="ew")
-
-        if variable in [self.saldo_z0, self.saldo_z1, self.saldo_z2]:
-            variable.trace_add("write", self.actualizar_notepad)
 
         return entry
 
@@ -351,139 +347,139 @@ class CuentaApp:
         b = max(0, int(b * (1 - factor)))
         return f"#{r:02x}{g:02x}{b:02x}"
 
-    def actualizar_notepad(self, *args):
+    def update_notepad(self, *_):
         try:
             self.notepad.delete("1.0", tk.END)
             self.notepad.insert(tk.END, "SALDOS ACTUALES:\n\n")
-            self.notepad.insert(tk.END, f"{self.nombre_z0.get()} (Inter): {self.saldo_z0.get()}\n")
-            self.notepad.insert(tk.END, f"{self.nombre_z1.get()} (Z1): {self.saldo_z1.get()}\n")
-            self.notepad.insert(tk.END, f"{self.nombre_z2.get()} (Z2): {self.saldo_z2.get()}\n")
+            self.notepad.insert(tk.END, f"{self.name_z0.get()} (Inter): {self.balance_z0.get()}\n")
+            self.notepad.insert(tk.END, f"{self.name_z1.get()} (Z1): {self.balance_z1.get()}\n")
+            self.notepad.insert(tk.END, f"{self.name_z2.get()} (Z2): {self.balance_z2.get()}\n")
 
-            if self.historial_partidas:
+            if self.game_history:
                 self.notepad.insert(tk.END, f"\n{'='*20}\n")
                 self.notepad.insert(tk.END, "ÚLTIMAS PARTIDAS:\n")
-                for partida in self.historial_partidas[-5:]:
-                    self.notepad.insert(tk.END, f"\n{partida}\n")
+                for game_entry in self.game_history[-5:]:
+                    self.notepad.insert(tk.END, f"\n{game_entry}\n")
         except AttributeError:
             pass
 
     def check_checkbox(self, clicked_var):
         """Ensure only one payment option is selected (mutual exclusion)"""
-        if clicked_var is self.dinero_real_var and self.dinero_real_var.get():
+        if clicked_var is self.real_money_var and self.real_money_var.get():
             self.usdt_var.set(False)
         elif clicked_var is self.usdt_var and self.usdt_var.get():
-            self.dinero_real_var.set(False)
+            self.real_money_var.set(False)
 
-    def actualizar_saldos(self, ganador):
+    def update_balances(self, winner):
         try:
-            monto_juego = self.juego_var.get()
+            game_amount = self.game_var.get()
         except tk.TclError:
-            self.mostrar_mensaje_error("Error", "El monto del juego no es válido.")
+            self.show_error("Error", "El monto del juego no es válido.")
             return
 
         if self.usdt_var.get():
-            if monto_juego < 1.0:
-                self.mostrar_mensaje_error("Error", "El monto del juego debe ser al menos 1 USDT.")
+            if game_amount < 1.0:
+                self.show_error("Error", "El monto del juego debe ser al menos 1 USDT.")
                 return
-            propina = self.calcular_propina_usdt(monto_juego)
+            tip = self.calculate_tip_usdt(game_amount)
         else:
-            if monto_juego < 5.0:
-                self.mostrar_mensaje_error("Error", "El monto del juego debe ser al menos 5 créditos.")
+            if game_amount < 5.0:
+                self.show_error("Error", "El monto del juego debe ser al menos 5 créditos.")
                 return
-            if self.dinero_real_var.get():
-                propina = round(monto_juego * 0.1, 2)
+            if self.real_money_var.get():
+                tip = round(game_amount * 0.1, 2)
             else:
-                propina = self.calcular_propina(monto_juego)
+                tip = self.calculate_tip(game_amount)
 
-        saldo_z0_inicial = self.saldo_z0.get()
-        saldo_z1_inicial = self.saldo_z1.get()
-        saldo_z2_inicial = self.saldo_z2.get()
+        initial_z0 = self.balance_z0.get()
+        initial_z1 = self.balance_z1.get()
+        initial_z2 = self.balance_z2.get()
 
-        if ganador == "z1":
-            nuevo_z0 = round(saldo_z0_inicial + propina, 2)
-            nuevo_z1 = round(saldo_z1_inicial + monto_juego - propina, 2)
-            nuevo_z2 = round(saldo_z2_inicial - monto_juego, 2)
+        if winner == "z1":
+            new_z0 = round(initial_z0 + tip, 2)
+            new_z1 = round(initial_z1 + game_amount - tip, 2)
+            new_z2 = round(initial_z2 - game_amount, 2)
         else:
-            nuevo_z0 = round(saldo_z0_inicial + propina, 2)
-            nuevo_z1 = round(saldo_z1_inicial - monto_juego, 2)
-            nuevo_z2 = round(saldo_z2_inicial + monto_juego - propina, 2)
+            new_z0 = round(initial_z0 + tip, 2)
+            new_z1 = round(initial_z1 - game_amount, 2)
+            new_z2 = round(initial_z2 + game_amount - tip, 2)
 
-        self.saldo_z0.set(nuevo_z0)
-        self.saldo_z1.set(nuevo_z1)
-        self.saldo_z2.set(nuevo_z2)
+        self.balance_z0.set(new_z0)
+        self.balance_z1.set(new_z1)
+        self.balance_z2.set(new_z2)
 
-        currency = "USDT" if self.usdt_var.get() else ("$" if self.dinero_real_var.get() else "C")
+        currency = "USDT" if self.usdt_var.get() else ("$" if self.real_money_var.get() else "C")
         timestamp = datetime.now().strftime("%d/%m/%Y %H:%M")
 
-        n0 = self.nombre_z0.get()
-        n1 = self.nombre_z1.get()
-        n2 = self.nombre_z2.get()
-        nombre_ganador = f"{n1} (Z1)" if ganador == "z1" else f"{n2} (Z2)"
+        n0 = self.name_z0.get()
+        n1 = self.name_z1.get()
+        n2 = self.name_z2.get()
+        winner_name = f"{n1} (Z1)" if winner == "z1" else f"{n2} (Z2)"
 
-        partida = (
-            f"[{timestamp}] Ganador: {nombre_ganador}\n"
-            f"Monto: {monto_juego} {currency}\n"
-            f"Propina: {propina} {currency}\n"
-            f"Saldos: {n0}={nuevo_z0}, {n1}={nuevo_z1}, {n2}={nuevo_z2}"
+        game_entry = (
+            f"[{timestamp}] Ganador: {winner_name}\n"
+            f"Monto: {game_amount} {currency}\n"
+            f"Propina: {tip} {currency}\n"
+            f"Saldos: {n0}={new_z0}, {n1}={new_z1}, {n2}={new_z2}"
         )
 
-        self.historial_partidas.append(partida)
-        self.actualizar_notepad()
-        self.guardar_autosave()
+        self.game_history.append(game_entry)
+        self.update_notepad()
+        self.save_autosave()
 
-        self.mostrar_mensaje_exito(
+        self.show_success(
             "Partida Registrada",
-            f"Ganador: {nombre_ganador}\n"
-            f"Monto: {monto_juego} {currency}\n"
-            f"Propina: {propina} {currency}"
+            f"Ganador: {winner_name}\n"
+            f"Monto: {game_amount} {currency}\n"
+            f"Propina: {tip} {currency}"
         )
 
-    def calcular_propina(self, monto_juego):
-        if 5.0 <= monto_juego < 10.0:
+    def calculate_tip(self, game_amount):
+        if 5.0 <= game_amount < 10.0:
             return 2.0
-        elif 10.0 <= monto_juego < 15.0:
+        elif 10.0 <= game_amount < 15.0:
             return 3.0
-        elif 15.0 <= monto_juego < 20.0:
+        elif 15.0 <= game_amount < 20.0:
             return 4.0
-        elif 20.0 <= monto_juego < 26.0:
+        elif 20.0 <= game_amount < 26.0:
             return 5.0
-        elif 26.0 <= monto_juego < 31.0:
+        elif 26.0 <= game_amount < 31.0:
             return 6.0
-        elif 31.0 <= monto_juego < 36.0:
+        elif 31.0 <= game_amount < 36.0:
             return 7.0
-        elif 36.0 <= monto_juego < 41.0:
+        elif 36.0 <= game_amount < 41.0:
             return 8.0
-        elif 41.0 <= monto_juego < 50.0:
+        elif 41.0 <= game_amount < 50.0:
             return 9.0
-        elif 50.0 <= monto_juego < 100.0:
+        elif 50.0 <= game_amount < 100.0:
             return 10.0
-        elif 100.0 <= monto_juego < 150.0:
+        elif 100.0 <= game_amount < 150.0:
             return 20.0
-        elif 150.0 <= monto_juego < 500.0:
+        elif 150.0 <= game_amount < 500.0:
             return 30.0
         else:
-            return round(50.0 * (monto_juego // 500.0), 2)
+            return round(50.0 * (game_amount // 500.0), 2)
 
-    def calcular_propina_usdt(self, monto_juego):
-        if 1.0 <= monto_juego < 10.0:
+    def calculate_tip_usdt(self, game_amount):
+        if 1.0 <= game_amount < 10.0:
             return 0.5
         else:
-            return round((monto_juego // 10.0), 2)
+            return round((game_amount // 10.0), 2)
 
-    def resetear(self):
-        if self.mostrar_mensaje_confirmacion("Confirmar", "¿Estás seguro de reiniciar todos los saldos y el historial?"):
-            self.saldo_z0.set(0.0)
-            self.saldo_z1.set(0.0)
-            self.saldo_z2.set(0.0)
-            self.juego_var.set(0.0)
-            self.historial_partidas.clear()
-            self.actualizar_notepad()
-            self.guardar_autosave()
-            self.mostrar_mensaje_exito("Reinicio", "Todos los saldos han sido reiniciados.")
+    def reset(self):
+        if self.show_confirmation("Confirmar", "¿Estás seguro de reiniciar todos los saldos y el historial?"):
+            self.balance_z0.set(0.0)
+            self.balance_z1.set(0.0)
+            self.balance_z2.set(0.0)
+            self.game_var.set(0.0)
+            self.game_history.clear()
+            self.update_notepad()
+            self.save_autosave()
+            self.show_success("Reinicio", "Todos los saldos han sido reiniciados.")
 
-    def mostrar_historial(self):
-        if not self.historial_partidas:
-            self.mostrar_mensaje_info("Historial", "No hay partidas registradas aún.")
+    def show_history(self):
+        if not self.game_history:
+            self.show_info("Historial", "No hay partidas registradas aún.")
             return
 
         hist_window = tk.Toplevel(self.root)
@@ -526,9 +522,9 @@ class CuentaApp:
         hist_text.insert(tk.END, "HISTORIAL COMPLETO DE PARTIDAS\n", "header")
         hist_text.insert(tk.END, "=" * 50 + "\n\n", "separator")
 
-        for i, partida in enumerate(self.historial_partidas, 1):
+        for i, game_entry in enumerate(self.game_history, 1):
             hist_text.insert(tk.END, f"Partida #{i}:\n", "subheader")
-            hist_text.insert(tk.END, f"{partida}\n\n", "normal")
+            hist_text.insert(tk.END, f"{game_entry}\n\n", "normal")
             hist_text.insert(tk.END, "-" * 40 + "\n\n", "separator")
 
         button_frame = ttk.Frame(hist_container)
@@ -536,10 +532,10 @@ class CuentaApp:
         button_frame.columnconfigure(0, weight=1)
 
         self.create_styled_button(button_frame, "EXPORTAR HISTORIAL",
-                                  lambda: self.exportar_historial(self.historial_partidas),
+                                  lambda: self.export_history(self.game_history),
                                   0, 0, color=self.colors["accent3"])
 
-    def exportar_historial(self, historial):
+    def export_history(self, history):
         filename = filedialog.asksaveasfilename(
             defaultextension=".txt",
             filetypes=(("Archivos de texto", "*.txt"), ("Todos los archivos", "*.*")),
@@ -550,14 +546,14 @@ class CuentaApp:
                 with open(filename, 'w', encoding='utf-8') as file:
                     file.write("HISTORIAL DE PARTIDAS HABBO\n")
                     file.write("=" * 50 + "\n\n")
-                    for i, partida in enumerate(historial, 1):
-                        file.write(f"Partida #{i}:\n{partida}\n\n")
+                    for i, game_entry in enumerate(history, 1):
+                        file.write(f"Partida #{i}:\n{game_entry}\n\n")
                         file.write("-" * 40 + "\n\n")
-                self.mostrar_mensaje_exito("Éxito", f"Historial exportado a {filename}")
+                self.show_success("Éxito", f"Historial exportado a {filename}")
             except OSError as e:
-                self.mostrar_mensaje_error("Error", f"Error al exportar historial: {str(e)}")
+                self.show_error("Error", f"Error al exportar historial: {str(e)}")
 
-    def importar_saldos(self):
+    def import_balances(self):
         filename = filedialog.askopenfilename(
             filetypes=(("Archivos de texto", "*.txt"), ("Todos los archivos", "*.*")),
             title="Abrir archivo de saldos"
@@ -571,20 +567,20 @@ class CuentaApp:
 
                 for line in data.split('\n'):
                     try:
-                        if "Inter (Z0):" in line:
-                            self.saldo_z0.set(float(line.split(":")[1].strip()))
-                        elif "Jugador 1 (Z1):" in line:
-                            self.saldo_z1.set(float(line.split(":")[1].strip()))
-                        elif "Jugador 2 (Z2):" in line:
-                            self.saldo_z2.set(float(line.split(":")[1].strip()))
+                        if "(Inter):" in line:
+                            self.balance_z0.set(float(line.split(":")[1].strip()))
+                        elif "(Z1):" in line:
+                            self.balance_z1.set(float(line.split(":")[1].strip()))
+                        elif "(Z2):" in line:
+                            self.balance_z2.set(float(line.split(":")[1].strip()))
                     except (ValueError, IndexError):
                         pass
 
-                self.mostrar_mensaje_exito("Importación", "Archivo importado correctamente.")
+                self.show_success("Importación", "Archivo importado correctamente.")
             except OSError as e:
-                self.mostrar_mensaje_error("Error", f"Error al importar archivo: {str(e)}")
+                self.show_error("Error", f"Error al importar archivo: {str(e)}")
 
-    def exportar_saldos(self):
+    def export_balances(self):
         filename = filedialog.asksaveasfilename(
             defaultextension=".txt",
             filetypes=(("Archivos de texto", "*.txt"), ("Todos los archivos", "*.*")),
@@ -594,21 +590,21 @@ class CuentaApp:
             try:
                 with open(filename, 'w', encoding='utf-8') as file:
                     file.write("SALDOS ACTUALES HABBO:\n\n")
-                    file.write(f"{self.nombre_z0.get()} (Inter): {self.saldo_z0.get()}\n")
-                    file.write(f"{self.nombre_z1.get()} (Z1): {self.saldo_z1.get()}\n")
-                    file.write(f"{self.nombre_z2.get()} (Z2): {self.saldo_z2.get()}\n")
+                    file.write(f"{self.name_z0.get()} (Inter): {self.balance_z0.get()}\n")
+                    file.write(f"{self.name_z1.get()} (Z1): {self.balance_z1.get()}\n")
+                    file.write(f"{self.name_z2.get()} (Z2): {self.balance_z2.get()}\n")
 
-                    if self.historial_partidas:
+                    if self.game_history:
                         file.write(f"\n{'='*20}\n")
                         file.write("HISTORIAL COMPLETO:\n")
-                        for partida in self.historial_partidas:
-                            file.write(f"\n{partida}\n")
+                        for game_entry in self.game_history:
+                            file.write(f"\n{game_entry}\n")
 
-                self.mostrar_mensaje_exito("Éxito", f"Saldos exportados a {filename}")
+                self.show_success("Éxito", f"Saldos exportados a {filename}")
             except OSError as e:
-                self.mostrar_mensaje_error("Error", f"Error al exportar archivo: {str(e)}")
+                self.show_error("Error", f"Error al exportar archivo: {str(e)}")
 
-    def guardar_notas_personales(self):
+    def save_personal_notes(self):
         filename = filedialog.asksaveasfilename(
             defaultextension=".txt",
             filetypes=(("Archivos de texto", "*.txt"), ("Todos los archivos", "*.*")),
@@ -617,15 +613,15 @@ class CuentaApp:
         if filename:
             try:
                 content = self.personal_notepad.get("1.0", tk.END)
-                if content.strip() == self.PLACEHOLDER_NOTAS.strip():
+                if content.strip() == self.NOTES_PLACEHOLDER.strip():
                     content = ""
                 with open(filename, 'w', encoding='utf-8') as file:
                     file.write(content)
-                self.mostrar_mensaje_exito("Éxito", f"Notas guardadas en {filename}")
+                self.show_success("Éxito", f"Notas guardadas en {filename}")
             except OSError as e:
-                self.mostrar_mensaje_error("Error", f"Error al guardar notas: {str(e)}")
+                self.show_error("Error", f"Error al guardar notas: {str(e)}")
 
-    def cargar_notas_personales(self):
+    def load_personal_notes(self):
         filename = filedialog.askopenfilename(
             filetypes=(("Archivos de texto", "*.txt"), ("Todos los archivos", "*.*")),
             title="Abrir archivo de notas"
@@ -637,22 +633,22 @@ class CuentaApp:
                 self.personal_notepad.delete("1.0", tk.END)
                 self.personal_notepad.config(fg=self.colors["foreground"])
                 self.personal_notepad.insert(tk.END, content)
-                self.mostrar_mensaje_exito("Carga Exitosa", f"Notas cargadas desde {filename}")
+                self.show_success("Carga Exitosa", f"Notas cargadas desde {filename}")
             except OSError as e:
-                self.mostrar_mensaje_error("Error", f"Error al cargar notas: {str(e)}")
+                self.show_error("Error", f"Error al cargar notas: {str(e)}")
 
-    def mostrar_mensaje_error(self, titulo, mensaje):
-        self.mostrar_mensaje_personalizado(titulo, mensaje, "#FF5F5D")
+    def show_error(self, title, message):
+        self.show_message(title, message, "#FF5F5D")
 
-    def mostrar_mensaje_exito(self, titulo, mensaje):
-        self.mostrar_mensaje_personalizado(titulo, mensaje, "#06D6A0")
+    def show_success(self, title, message):
+        self.show_message(title, message, "#06D6A0")
 
-    def mostrar_mensaje_info(self, titulo, mensaje):
-        self.mostrar_mensaje_personalizado(titulo, mensaje, "#3BBFEF")
+    def show_info(self, title, message):
+        self.show_message(title, message, "#3BBFEF")
 
-    def mostrar_mensaje_confirmacion(self, titulo, mensaje):
+    def show_confirmation(self, title, message):
         dialog = tk.Toplevel(self.root)
-        dialog.title(titulo)
+        dialog.title(title)
         dialog.geometry("400x220")
         dialog.configure(bg=self.colors["panel"])
         dialog.transient(self.root)
@@ -665,7 +661,7 @@ class CuentaApp:
         y = (dialog.winfo_screenheight() // 2) - (height // 2)
         dialog.geometry(f"{width}x{height}+{x}+{y}")
 
-        message_label = tk.Label(dialog, text=mensaje, font=self.text_font,
+        message_label = tk.Label(dialog, text=message, font=self.text_font,
                                  bg=self.colors["panel"], fg=self.colors["foreground"],
                                  wraplength=350, justify=tk.CENTER)
         message_label.pack(pady=(20, 30), padx=20)
@@ -705,9 +701,9 @@ class CuentaApp:
         dialog.wait_window()
         return result[0]
 
-    def mostrar_mensaje_personalizado(self, titulo, mensaje, color_acento):
+    def show_message(self, title, message, accent_color):
         dialog = tk.Toplevel(self.root)
-        dialog.title(titulo)
+        dialog.title(title)
         dialog.geometry("400x220")
         dialog.configure(bg=self.colors["panel"])
         dialog.transient(self.root)
@@ -720,30 +716,30 @@ class CuentaApp:
         y = (dialog.winfo_screenheight() // 2) - (height // 2)
         dialog.geometry(f"{width}x{height}+{x}+{y}")
 
-        header = tk.Frame(dialog, bg=color_acento, height=10)
+        header = tk.Frame(dialog, bg=accent_color, height=10)
         header.pack(fill=tk.X)
 
-        title_label = tk.Label(dialog, text=titulo, font=self.header_font,
-                               bg=self.colors["panel"], fg=color_acento)
+        title_label = tk.Label(dialog, text=title, font=self.header_font,
+                               bg=self.colors["panel"], fg=accent_color)
         title_label.pack(pady=(20, 10))
 
-        message_label = tk.Label(dialog, text=mensaje, font=self.text_font,
+        message_label = tk.Label(dialog, text=message, font=self.text_font,
                                  bg=self.colors["panel"], fg=self.colors["foreground"],
                                  wraplength=350, justify=tk.CENTER)
         message_label.pack(pady=10, padx=20)
 
         ok_button = tk.Button(
             dialog, text="ACEPTAR", font=self.text_font,
-            bg=color_acento, fg=self.colors["foreground"],
-            activebackground=self.darken_color(color_acento),
+            bg=accent_color, fg=self.colors["foreground"],
+            activebackground=self.darken_color(accent_color),
             activeforeground=self.colors["foreground"],
             relief=tk.FLAT, borderwidth=0, padx=25, pady=8,
             command=dialog.destroy
         )
         ok_button.pack(pady=20)
 
-        ok_button.bind("<Enter>", lambda e, b=ok_button, c=color_acento: self.on_hover(b, c))
-        ok_button.bind("<Leave>", lambda e, b=ok_button, c=color_acento: self.on_leave(b, c))
+        ok_button.bind("<Enter>", lambda e, b=ok_button, c=accent_color: self.on_hover(b, c))
+        ok_button.bind("<Leave>", lambda e, b=ok_button, c=accent_color: self.on_leave(b, c))
 
 
 if __name__ == "__main__":
