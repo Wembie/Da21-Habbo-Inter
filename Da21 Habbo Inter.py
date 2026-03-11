@@ -408,7 +408,16 @@ class CuentaApp:
         self.balance_z1.set(new_z1)
         self.balance_z2.set(new_z2)
 
-        currency = "USDT" if self.usdt_var.get() else ("$" if self.real_money_var.get() else "C")
+        if self.usdt_var.get():
+            payment_method = "USDT"
+            currency = "USDT"
+        elif self.real_money_var.get():
+            payment_method = "Dinero Real"
+            currency = "$"
+        else:
+            payment_method = "Créditos Habbo"
+            currency = "C"
+
         timestamp = datetime.now().strftime("%d/%m/%Y %H:%M")
 
         n0 = self.name_z0.get()
@@ -418,9 +427,10 @@ class CuentaApp:
 
         game_entry = (
             f"[{timestamp}] Ganador: {winner_name}\n"
+            f"Método: {payment_method}\n"
             f"Monto: {game_amount} {currency}\n"
             f"Propina: {tip} {currency}\n"
-            f"Saldos: {n0}={new_z0}, {n1}={new_z1}, {n2}={new_z2}"
+            f"Saldos: {n0}(Inter)={new_z0}, {n1}(Z1)={new_z1}, {n2}(Z2)={new_z2}"
         )
 
         self.game_history.append(game_entry)
