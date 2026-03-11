@@ -1,21 +1,53 @@
 # Da21 Habbo Inter
 
-¡Bienvenido a Da21 Habbo Inter!
-
 Aplicación de escritorio desarrollada en Python con Tkinter para llevar el registro de saldos y partidas entre un intermediario (Inter) y dos jugadores (Z1, Z2) en juegos estilo Habbo.
 
 ## Funcionalidades
 
-- Nombres personalizables para el Inter y cada jugador
-- Registro de saldos en tiempo real con actualización automática según el resultado
-- Tres modos de pago: **Créditos Habbo**, **Dinero Real** (con selector de moneda) y **USDT**
-- Selector de moneda con todas las divisas ISO 4217 (~160 monedas)
-- Cálculo automático de propina según el monto jugado
-- Historial completo de partidas con timestamp y método de pago
-- Autosave automático al cerrar/resetear (se restaura al reabrir)
-- Exportación e importación de saldos e historial en `.txt`
-- Bloc de notas personal con guardado y carga desde archivo
-- Interfaz oscura moderna con efectos hover en botones
+- **Nombres personalizables** para el Inter, Z1 y Z2 (con etiquetas de rol visibles)
+- **Saldos en tiempo real** — actualizados automáticamente al registrar cada partida
+- **Saldo negativo** destacado en rojo automáticamente en cards y panel de resumen
+- **Tres modos de pago:**
+  - Sin marcar → **Créditos Habbo** (tabla de propinas fija)
+  - **Dinero Real** → selector de moneda ISO 4217 (~160 divisas, por defecto COP)
+  - **USDT** → propina calculada en dólares
+- **Botones de victoria dinámicos** — muestran el nombre real del jugador (no "Z1/Z2")
+- **Historial completo** con timestamp, ganador, método de pago, monto, propina y saldos con moneda
+- **Autosave automático** en JSON — se restaura el estado completo al reabrir
+- **Exportación e importación** de saldos e historial en `.txt`
+- **Bloc de notas personal** con guardado y carga desde archivo
+- **Interfaz oscura moderna** con tema navy-dark, cards por jugador con avatar circular y triple stripe de colores en el header
+
+## Capturas por versión
+
+Las capturas se guardan en la carpeta [`screenshots/`](screenshots/) del repositorio.
+
+### Version 1
+
+![Version 1](screenshots/Version%201.png)
+
+---
+
+### Version 2
+
+![Version 2](screenshots/Version%202.png)
+
+---
+
+### Version 3 (Actual)
+
+![Version 3](screenshots/Version%203.png)
+
+---
+
+<!-- Para agregar una nueva versión, copiá el bloque de abajo y pegalo aquí:
+
+### Version X
+
+![Version X](screenshots/Version%20X.png)
+
+-->
+
 
 ## Estructura del proyecto
 
@@ -24,21 +56,22 @@ Da21-Habbo-Inter/
 ├── main.py
 ├── pyproject.toml
 ├── .gitignore
+├── screenshots/               # Capturas por versión
 └── app/
-    ├── constants.py           # Colores, monedas, strings globales
+    ├── constants.py           # Colores (paleta navy-dark), monedas ISO 4217, strings
     ├── models/
     │   ├── game_state.py      # Dataclass GameState
-    │   └── tip_calculator.py  # Cálculo de propinas
+    │   └── tip_calculator.py  # Cálculo de propinas (créditos y USDT)
     ├── services/
-    │   └── persistence.py     # Autosave (carga/guarda JSON)
+    │   └── persistence.py     # Autosave — carga/guarda JSON
     └── ui/
-        ├── theme.py           # Fuentes y estilos ttk
-        ├── widgets.py         # Factory functions de widgets
-        ├── dialogs.py         # Diálogos y ventana de historial
-        ├── app.py             # Orquestador principal
+        ├── theme.py           # Fuentes Segoe UI / Consolas y estilos ttk
+        ├── widgets.py         # RoundedButton, player_card, section_title, etc.
+        ├── dialogs.py         # Diálogos personalizados y ventana de historial
+        ├── app.py             # Orquestador principal (ventana, header, layout)
         └── panels/
-            ├── controls_panel.py  # Panel izquierdo (saldos, juego, acciones)
-            └── notepad_panel.py   # Panel derecho (notepad + notas personales)
+            ├── controls_panel.py  # Panel izquierdo — jugadores, juego, pagos, acciones
+            └── notepad_panel.py   # Panel derecho — resumen de saldos y notas personales
 ```
 
 ## Instalación
@@ -65,7 +98,7 @@ cd Da21-Habbo-Inter
 python main.py
 ```
 
-> Requiere Python 3.10 o superior. No tiene dependencias externas (solo stdlib).
+> Requiere **Python 3.10+**. Sin dependencias externas (solo stdlib + tkinter).
 
 ## Uso
 
@@ -73,19 +106,26 @@ python main.py
 python main.py
 ```
 
-1. Editá los nombres del Inter, Jugador 1 y Jugador 2 directamente en los campos de la interfaz
-2. Ingresá los saldos iniciales de cada uno
-3. Seleccioná el tipo de pago:
-   - Sin marcar → **Créditos Habbo** (tabla de propinas fija)
-   - **Dinero Real** → elegí la moneda en el selector (COP por defecto)
-   - **USDT** → propina calculada en dólares
-4. Ingresá el monto del juego y presioná **Z1 GANA** o **Z2 GANA**
-5. Usá **HISTORIAL** para ver y exportar todas las partidas
-6. Usá **EXPORTAR SALDOS** para guardar el estado actual en un `.txt`
+1. Editá los **nombres** del Inter, Z1 y Z2 directamente en sus cards
+2. Ingresá los **saldos iniciales** de cada jugador en el campo "Saldo"
+3. Elegí el **tipo de pago**:
+   - Sin marcar → Créditos Habbo
+   - **Dinero Real** → seleccioná la moneda (COP por defecto)
+   - **USDT** → propina automática en dólares
+4. Ingresá el **monto del juego** en el campo central
+5. Presioná el botón del ganador — los saldos se actualizan al instante
+6. Usá **HISTORIAL** para ver todas las partidas y exportarlas a `.txt`
+7. Usá **EXPORTAR SALDOS** para guardar el estado actual
 
-## Foto
+### Formato del historial
 
-![Habbo Da21](https://i.imgur.com/pYbbNuz.png)
+```
+[DD/MM/AAAA HH:MM] Ganador: Nombre (Z1)
+Método: Créditos Habbo
+Monto: 50.0 C
+Propina: 5.0 C
+Saldos [C]: Inter(Inter)=10.0, Jugador1(Z1)=40.0, Jugador2(Z2)=-50.0
+```
 
 ## Video Explicativo
 
