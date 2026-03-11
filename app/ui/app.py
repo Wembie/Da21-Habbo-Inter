@@ -30,7 +30,7 @@ class CuentaApp:
 
         self._build_header()
 
-        container = ttk.Frame(self._root, padding="10 10 10 10", style="TFrame")
+        container = ttk.Frame(self._root, padding="6 6 6 6", style="TFrame")
         container.grid(row=1, column=0, sticky="nsew")
         container.columnconfigure(0, weight=1)
         container.columnconfigure(1, weight=1)
@@ -56,7 +56,7 @@ class CuentaApp:
 
         # Title block
         title_block = tk.Frame(header, bg=COLORS["panel"])
-        title_block.pack(side=tk.LEFT, padx=18, pady=14)
+        title_block.pack(side=tk.LEFT, padx=14, pady=8)
 
         tk.Label(
             title_block,
@@ -75,8 +75,8 @@ class CuentaApp:
         ).pack(anchor="w")
 
         # Version pill on the right
-        pill = tk.Frame(header, bg=COLORS["highlight"], padx=10, pady=4)
-        pill.pack(side=tk.RIGHT, padx=16, pady=14)
+        pill = tk.Frame(header, bg=COLORS["highlight"], padx=8, pady=3)
+        pill.pack(side=tk.RIGHT, padx=12, pady=8)
         tk.Label(
             pill, text="v1.0.0",
             font=self._fonts["small"],

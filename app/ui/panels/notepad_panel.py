@@ -33,7 +33,7 @@ class NotepadPanel:
 
         # ── Stat cards ──────────────────────────────────────────────────────
         cards_frame = tk.Frame(lf, bg=self._colors["panel"])
-        cards_frame.grid(row=0, column=0, sticky="ew", padx=6, pady=(10, 4))
+        cards_frame.grid(row=0, column=0, sticky="ew", padx=5, pady=(6, 2))
         cards_frame.columnconfigure(0, weight=1)
 
         for role, color_key in [("Inter", "inter"), ("Z1", "z1"), ("Z2", "z2")]:
@@ -95,25 +95,25 @@ class NotepadPanel:
 
         # Thin border wrapper
         outer = tk.Frame(parent, bg=self._colors["border"], pady=1, padx=1)
-        outer.pack(fill=tk.X, pady=4)
+        outer.pack(fill=tk.X, pady=2)
 
-        card = tk.Frame(outer, bg=card_bg, pady=10)
+        card = tk.Frame(outer, bg=card_bg, pady=5)
         card.pack(fill=tk.X)
         card.columnconfigure(2, weight=1)
 
         # Left colored stripe
-        tk.Frame(card, bg=tag_color, width=5).grid(
-            row=0, column=0, rowspan=2, sticky="ns", padx=(6, 10)
+        tk.Frame(card, bg=tag_color, width=4).grid(
+            row=0, column=0, rowspan=2, sticky="ns", padx=(4, 8)
         )
 
         # Avatar circle
-        av = tk.Canvas(card, width=34, height=34, bg=card_bg, highlightthickness=0)
-        av.grid(row=0, column=1, rowspan=2, padx=(0, 10), sticky="w")
-        av.create_oval(1, 1, 33, 33, fill=tag_color, outline="")
+        av = tk.Canvas(card, width=26, height=26, bg=card_bg, highlightthickness=0)
+        av.grid(row=0, column=1, rowspan=2, padx=(0, 8), sticky="w")
+        av.create_oval(1, 1, 25, 25, fill=tag_color, outline="")
         av.create_text(
-            17, 17, text=role[0],
-            font=self._fonts["text"],
-            fill=self._colors.get("panel", "#13132A"),
+            13, 13, text=role[0],
+            font=self._fonts["small"],
+            fill=self._colors.get("panel", "#191930"),
         )
 
         # Name label
@@ -121,14 +121,14 @@ class NotepadPanel:
             card, text=f"... ({role})",
             font=self._fonts["small"], fg=tag_color, bg=card_bg, anchor="w",
         )
-        name_lbl.grid(row=0, column=2, sticky="w", padx=(0, 8))
+        name_lbl.grid(row=0, column=2, sticky="w", padx=(0, 6))
 
         # Balance label
         bal_lbl = tk.Label(
             card, text="0.0",
             font=self._fonts["header"], fg=tag_color, bg=card_bg, anchor="w",
         )
-        bal_lbl.grid(row=1, column=2, sticky="w", padx=(0, 8))
+        bal_lbl.grid(row=1, column=2, sticky="w", padx=(0, 6))
 
         return name_lbl, bal_lbl
 

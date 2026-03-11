@@ -6,15 +6,15 @@ from app.constants import COLORS
 
 def setup_fonts(root: tk.Tk) -> dict[str, font.Font]:  # noqa: ARG001
     return {
-        "title":   font.Font(family="Segoe UI", size=20, weight="bold"),
-        "header":  font.Font(family="Segoe UI", size=12, weight="bold"),
-        "text":    font.Font(family="Segoe UI", size=10),
-        "small":   font.Font(family="Segoe UI", size=9),
-        "balance": font.Font(family="Segoe UI", size=24, weight="bold"),
-        "button":  font.Font(family="Segoe UI", size=11, weight="bold"),
-        "tag":     font.Font(family="Segoe UI", size=13, weight="bold"),
-        "amount":  font.Font(family="Segoe UI", size=30, weight="bold"),
-        "mono":    font.Font(family="Consolas",  size=9),
+        "title":   font.Font(family="Segoe UI", size=15, weight="bold"),
+        "header":  font.Font(family="Segoe UI", size=10, weight="bold"),
+        "text":    font.Font(family="Segoe UI", size=9),
+        "small":   font.Font(family="Segoe UI", size=8),
+        "balance": font.Font(family="Segoe UI", size=16, weight="bold"),
+        "button":  font.Font(family="Segoe UI", size=9, weight="bold"),
+        "tag":     font.Font(family="Segoe UI", size=10, weight="bold"),
+        "amount":  font.Font(family="Segoe UI", size=22, weight="bold"),
+        "mono":    font.Font(family="Consolas",  size=8),
     }
 
 

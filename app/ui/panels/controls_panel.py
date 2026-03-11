@@ -56,7 +56,7 @@ class ControlsPanel:
 
     def _build(self, parent: ttk.Frame) -> None:
         frame = ttk.LabelFrame(
-            parent, text="", padding="16 14 16 14", style="TLabelframe"
+            parent, text="", padding="10 8 10 8", style="TLabelframe"
         )
         frame.grid(row=0, column=0, sticky="nsew", padx=(8, 4), pady=8)
         frame.columnconfigure(0, weight=1)
@@ -76,7 +76,7 @@ class ControlsPanel:
             font=self._fonts["small"],
             fg=self._colors["muted"],
             bg=self._colors["panel"],
-        ).grid(row=_ROW_FOOTER, column=0, columnspan=3, pady=(14, 2))
+        ).grid(row=_ROW_FOOTER, column=0, columnspan=3, pady=(6, 2))
 
     def _build_balances(self, parent: ttk.Frame) -> None:
         widgets.section_title(
@@ -128,7 +128,7 @@ class ControlsPanel:
             highlightthickness=2,
             highlightbackground=self._colors["border"],
             highlightcolor=self._colors["accent3"],
-        ).grid(row=0, column=0, sticky="ew", padx=4, ipady=18)
+        ).grid(row=0, column=0, sticky="ew", padx=4, ipady=8)
 
     def _build_payment(self, parent: ttk.Frame) -> None:
         pf = ttk.LabelFrame(parent, text="TIPO DE PAGO", style="TLabelframe")
@@ -185,12 +185,12 @@ class ControlsPanel:
         self._btn_z1 = widgets.styled_button(
             rf, f"\u25b6  {n1} GANA", lambda: self._record_game("z1"),
             0, 0, self._colors, self._fonts,
-            color=self._colors["z1"], height=70,
+            color=self._colors["z1"], height=48,
         )
         self._btn_z2 = widgets.styled_button(
             rf, f"\u25b6  {n2} GANA", lambda: self._record_game("z2"),
             0, 1, self._colors, self._fonts,
-            color=self._colors["z2"], height=70,
+            color=self._colors["z2"], height=48,
         )
 
     def _build_actions(self, parent: ttk.Frame) -> None:

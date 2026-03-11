@@ -29,7 +29,6 @@ def darken_color(hex_color: str, factor: float = 0.18) -> str:
 def _create_rounded_rect(
     canvas: tk.Canvas, x: int, y: int, w: int, h: int, r: int, **kw
 ) -> int:
-    """Draw a smooth rounded rectangle on a Canvas, return item id."""
     pts = [
         x + r, y,       x + w - r, y,
         x + w, y,       x + w, y + r,
@@ -57,8 +56,8 @@ class RoundedButton(tk.Canvas):
         parent_bg: str,
         fonts: dict,
         width: int = 160,
-        height: int = 46,
-        radius: int = 10,
+        height: int = 36,
+        radius: int = 8,
     ) -> None:
         super().__init__(
             parent,
@@ -84,7 +83,7 @@ class RoundedButton(tk.Canvas):
             fill=fg_color,
         )
 
-        # ── Fix: only bind Button-1 at canvas level to avoid double-firing ──
+        # Only canvas-level Button-1 to avoid double-firing
         for item in (self._rect, self._label):
             self.tag_bind(item, "<Enter>", self._on_enter)
             self.tag_bind(item, "<Leave>", self._on_leave)
@@ -119,13 +118,13 @@ def styled_button(
     color: str | None = None,
     parent_bg: str | None = None,
     width: int = 160,
-    height: int = 46,
+    height: int = 36,
 ) -> RoundedButton:
     bg = color or colors["accent1"]
     pbg = parent_bg or colors["panel"]
     btn = RoundedButton(parent, text, command, bg, colors["foreground"],
                         pbg, fonts, width=width, height=height)
-    btn.grid(row=row, column=col, padx=6, pady=5, sticky="ew")
+    btn.grid(row=row, column=col, padx=5, pady=4, sticky="ew")
     return btn
 
 
@@ -140,14 +139,14 @@ def section_title(
 ) -> None:
     frame = tk.Frame(parent, bg=colors["panel"])
     frame.grid(row=row, column=col, columnspan=colspan,
-               sticky="ew", pady=(16, 4), padx=2)
+               sticky="ew", pady=(8, 2), padx=2)
 
-    tk.Frame(frame, bg=colors["accent2"], width=4).pack(
-        side=tk.LEFT, fill=tk.Y, padx=(0, 10)
+    tk.Frame(frame, bg=colors["accent2"], width=3).pack(
+        side=tk.LEFT, fill=tk.Y, padx=(0, 8)
     )
     tk.Label(
         frame, text=text, font=fonts["header"],
-        fg=colors["foreground"], bg=colors["panel"], pady=4,
+        fg=colors["foreground"], bg=colors["panel"], pady=2,
     ).pack(side=tk.LEFT, anchor="w")
 
 
@@ -167,7 +166,7 @@ def label_entry(
 
     tk.Label(frame, text=text, font=fonts["text"],
              fg=colors["muted"], bg=colors["panel"], anchor="w",
-             ).grid(row=0, column=0, padx=5, pady=2, sticky="w")
+             ).grid(row=0, column=0, padx=4, pady=1, sticky="w")
 
     entry = tk.Entry(frame, textvariable=variable, font=fonts["text"],
                      bg=colors["input"], fg=colors["foreground"],
@@ -175,7 +174,7 @@ def label_entry(
                      relief=tk.FLAT, bd=0, highlightthickness=1,
                      highlightbackground=colors["border"],
                      highlightcolor=colors["accent2"])
-    entry.grid(row=0, column=1, padx=5, pady=2, sticky="ew", ipady=4)
+    entry.grid(row=0, column=1, padx=4, pady=1, sticky="ew", ipady=3)
     return entry
 
 
@@ -190,42 +189,42 @@ def player_card(
     fonts: dict,
     on_change: Callable,
 ) -> None:
-    """Card with avatar circle, role tag, large balance (red if negative), editable fields."""
+    """Compact card: avatar circle, role, balance (red if negative), editable fields."""
     card_bg = colors.get("card", colors["panel"])
 
     card = tk.Frame(
         parent, bg=card_bg,
         highlightthickness=1, highlightbackground=tag_color,
-        padx=12, pady=10,
+        padx=8, pady=6,
     )
-    card.grid(row=0, column=col, padx=5, pady=4, sticky="nsew")
+    card.grid(row=0, column=col, padx=4, pady=3, sticky="nsew")
     card.columnconfigure(0, weight=1)
 
-    # Colored top stripe (thicker)
-    tk.Frame(card, bg=tag_color, height=4).grid(
-        row=0, column=0, sticky="ew", pady=(0, 10)
+    # Colored top stripe
+    tk.Frame(card, bg=tag_color, height=3).grid(
+        row=0, column=0, sticky="ew", pady=(0, 6)
     )
 
     # Avatar + role row
     top_row = tk.Frame(card, bg=card_bg)
-    top_row.grid(row=1, column=0, sticky="w", pady=(0, 6))
+    top_row.grid(row=1, column=0, sticky="w", pady=(0, 3))
 
-    av = tk.Canvas(top_row, width=40, height=40, bg=card_bg, highlightthickness=0)
-    av.pack(side=tk.LEFT, padx=(0, 10))
-    av.create_oval(2, 2, 38, 38, fill=tag_color, outline="")
-    av.create_text(20, 20, text=role[0], font=fonts["header"], fill=colors.get("panel", "#13132A"))
+    av = tk.Canvas(top_row, width=28, height=28, bg=card_bg, highlightthickness=0)
+    av.pack(side=tk.LEFT, padx=(0, 7))
+    av.create_oval(1, 1, 27, 27, fill=tag_color, outline="")
+    av.create_text(14, 14, text=role[0], font=fonts["small"], fill=colors.get("panel", "#191930"))
 
     tk.Label(
         top_row, text=role, font=fonts["tag"],
         fg=tag_color, bg=card_bg,
-    ).pack(side=tk.LEFT, anchor="s", pady=(0, 3))
+    ).pack(side=tk.LEFT, anchor="s", pady=(0, 1))
 
-    # Balance display — large, red when negative
+    # Balance — large, red when negative
     bal_label = tk.Label(
         card, text=_fmt(balance_var.get()),
         font=fonts["balance"], fg=tag_color, bg=card_bg,
     )
-    bal_label.grid(row=2, column=0, sticky="w", pady=(0, 12))
+    bal_label.grid(row=2, column=0, sticky="w", pady=(0, 6))
 
     # Name field
     tk.Label(card, text="Nombre", font=fonts["small"],
@@ -237,7 +236,7 @@ def player_card(
              relief=tk.FLAT, bd=0,
              highlightthickness=1, highlightbackground=colors["border"],
              highlightcolor=tag_color,
-             ).grid(row=4, column=0, sticky="ew", ipady=5, pady=(2, 10))
+             ).grid(row=4, column=0, sticky="ew", ipady=3, pady=(1, 6))
 
     # Balance field
     tk.Label(card, text="Saldo", font=fonts["small"],
@@ -249,7 +248,7 @@ def player_card(
              relief=tk.FLAT, bd=0,
              highlightthickness=1, highlightbackground=colors["border"],
              highlightcolor=tag_color,
-             ).grid(row=6, column=0, sticky="ew", ipady=5, pady=(2, 0))
+             ).grid(row=6, column=0, sticky="ew", ipady=3, pady=(1, 0))
 
     def _update_label(*_) -> None:
         try:
@@ -275,7 +274,7 @@ def styled_checkbox(
     command: Callable,
 ) -> tk.Checkbutton:
     frame = tk.Frame(parent, bg=colors["panel"])
-    frame.grid(row=row, column=col, padx=10, pady=8, sticky="w")
+    frame.grid(row=row, column=col, padx=8, pady=5, sticky="w")
     cb = tk.Checkbutton(
         frame, text=text, variable=variable, command=command,
         font=fonts["text"],
