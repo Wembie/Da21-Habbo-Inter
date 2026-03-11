@@ -1,0 +1,15 @@
+[project]
+name = "da21-habbo-inter"
+version = "1.0.0"
+description = "Habbo Inter balance tracker"
+authors = [
+    { name = "Wembie / _Acos_" },
+]
+requires-python = ">=3.10"
+dependencies = []
+
+[tool.uv]
+dev-dependencies = []
+
+[project.scripts]
+da21 = "main:__main__"
