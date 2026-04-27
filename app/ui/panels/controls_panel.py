@@ -390,7 +390,7 @@ class ControlsPanel:
                 )
                 return
             tip = calculate_tip(game_amount)
-            currency = rule.symbol
+            currency = "C"
             payment_method = f"Créditos Habbo ({rule.name})"
 
         b0 = self._balance_z0.get()

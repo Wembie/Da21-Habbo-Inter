@@ -52,8 +52,8 @@
   {
     "id": "legion",
     "name": "Legión",
-    "symbol": "L",
-    "unit_size": 50.0,
+    "symbol": "C",
+    "unit_size": 1.0,
     "min_credits": 50.0,
     "usdt_min": 2.0,
     "usdt_table": [
