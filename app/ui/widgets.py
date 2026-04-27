@@ -290,6 +290,181 @@ def styled_checkbox(
 
 # ─────────────────────────────────────────── private ────────────────────────
 
+class SearchableCurrencyPicker(tk.Frame):
+    """Button that shows the current currency and opens a live-search picker popup."""
+
+    def __init__(
+        self,
+        parent: tk.Widget,
+        variable: tk.StringVar,
+        currencies: list[str],
+        colors: dict,
+        fonts: dict,
+    ) -> None:
+        super().__init__(parent, bg=colors["panel"])
+        self._var = variable
+        self._currencies = currencies
+        self._colors = colors
+        self._fonts = fonts
+        self._enabled = False
+        self._popup: tk.Toplevel | None = None
+        self._close_bind_id: str = ""
+
+        self._btn = tk.Button(
+            self,
+            textvariable=variable,
+            font=fonts["text"],
+            width=7,
+            bg=colors["input"],
+            fg=colors["muted"],
+            activebackground=colors["card"],
+            activeforeground=colors["foreground"],
+            relief=tk.FLAT,
+            bd=0,
+            highlightthickness=1,
+            highlightbackground=colors["border"],
+            highlightcolor=colors["accent2"],
+            command=self._toggle_picker,
+        )
+        self._btn.pack()
+
+    def set_enabled(self, enabled: bool) -> None:
+        self._enabled = enabled
+        self._btn.config(
+            fg=self._colors["foreground"] if enabled else self._colors["muted"],
+            cursor="hand2" if enabled else "arrow",
+        )
+        if not enabled and self._popup and self._popup.winfo_exists():
+            self._popup.destroy()
+            self._popup = None
+
+    def _toggle_picker(self) -> None:
+        if not self._enabled:
+            return
+        if self._popup and self._popup.winfo_exists():
+            self._popup.destroy()
+            self._popup = None
+            return
+        self._open_picker()
+
+    def _open_picker(self) -> None:
+        root = self.winfo_toplevel()
+        popup = tk.Toplevel(root)
+        self._popup = popup
+        popup.overrideredirect(True)
+        popup.configure(bg=self._colors["border"])
+        popup.lift()
+
+        x = self._btn.winfo_rootx()
+        y = self._btn.winfo_rooty() + self._btn.winfo_height() + 3
+        popup.geometry(f"190x260+{x}+{y}")
+
+        search_var = tk.StringVar()
+        search_entry = tk.Entry(
+            popup,
+            textvariable=search_var,
+            font=self._fonts["text"],
+            bg=self._colors["input"],
+            fg=self._colors["foreground"],
+            insertbackground=self._colors["foreground"],
+            relief=tk.FLAT,
+            bd=0,
+            highlightthickness=1,
+            highlightbackground=self._colors["accent2"],
+            highlightcolor=self._colors["accent2"],
+        )
+        search_entry.pack(fill=tk.X, padx=1, pady=(1, 0), ipady=5)
+        search_entry.focus_set()
+
+        lb_frame = tk.Frame(popup, bg=self._colors["border"])
+        lb_frame.pack(fill=tk.BOTH, expand=True, padx=1, pady=(1, 1))
+
+        lb = tk.Listbox(
+            lb_frame,
+            font=self._fonts["text"],
+            bg=self._colors["input"],
+            fg=self._colors["foreground"],
+            selectbackground=self._colors["accent2"],
+            selectforeground=self._colors["foreground"],
+            activestyle="none",
+            relief=tk.FLAT,
+            bd=0,
+            highlightthickness=0,
+        )
+        sb = ttk.Scrollbar(lb_frame, command=lb.yview)
+        sb.pack(side=tk.RIGHT, fill=tk.Y)
+        lb.config(yscrollcommand=sb.set)
+        lb.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+
+        filtered: list[str] = []
+
+        def _populate(items: list[str]) -> None:
+            nonlocal filtered
+            filtered = items
+            lb.delete(0, tk.END)
+            for item in items:
+                lb.insert(tk.END, item)
+
+        _populate(self._currencies)
+
+        cur = self._var.get()
+        if cur in self._currencies:
+            idx = self._currencies.index(cur)
+            lb.see(idx)
+            lb.selection_set(idx)
+
+        def _filter(*_) -> None:
+            q = search_var.get().upper()
+            _populate([c for c in self._currencies if q in c])
+
+        search_var.trace_add("write", _filter)
+
+        def _select(_event=None) -> None:
+            sel = lb.curselection()
+            if sel:
+                self._var.set(filtered[sel[0]])
+            _close()
+
+        def _close() -> None:
+            if popup.winfo_exists():
+                popup.destroy()
+            self._popup = None
+            try:
+                root.unbind("<Button-1>", self._close_bind_id)
+            except Exception:
+                pass
+
+        lb.bind("<Double-Button-1>", _select)
+        lb.bind("<Return>", _select)
+        lb.bind("<Escape>", lambda _e: _close())
+        search_entry.bind("<Return>", lambda _e: _select())
+        search_entry.bind("<Escape>", lambda _e: _close())
+        search_entry.bind(
+            "<Down>",
+            lambda _e: (lb.focus_set(), lb.selection_set(0)) if lb.size() > 0 else None,
+        )
+
+        def _close_on_outside(event: tk.Event) -> None:
+            if not popup.winfo_exists():
+                return
+            w = event.widget
+            while w is not None:
+                if w is popup:
+                    return
+                try:
+                    w = w.master
+                except Exception:
+                    break
+            _close()
+
+        def _bind_close() -> None:
+            self._close_bind_id = root.bind("<Button-1>", _close_on_outside, "+")
+
+        root.after(150, _bind_close)
+
+
+# ─────────────────────────────────────────── private ────────────────────────
+
 def _fmt(value: float) -> str:
     return f"{value:,.1f}"
 
