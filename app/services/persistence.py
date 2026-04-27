@@ -23,6 +23,7 @@ class PersistenceService:
                 name_z1=data.get("name_z1", "Jugador 1"),
                 name_z2=data.get("name_z2", "Jugador 2"),
                 currency=data.get("currency", "COP"),
+                dice_rule_id=data.get("dice_rule_id", "estandar"),
                 history=data.get("history", []),
             )
         except (json.JSONDecodeError, KeyError, OSError):
@@ -38,6 +39,7 @@ class PersistenceService:
                 "name_z1": state.name_z1,
                 "name_z2": state.name_z2,
                 "currency": state.currency,
+                "dice_rule_id": state.dice_rule_id,
                 "history": state.history,
             }
             with open(self._filepath, "w", encoding="utf-8") as f:

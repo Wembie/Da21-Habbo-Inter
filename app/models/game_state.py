@@ -10,4 +10,5 @@ class GameState:
     name_z1: str = "Jugador 1"
     name_z2: str = "Jugador 2"
     currency: str = "COP"
+    dice_rule_id: str = "estandar"
     history: list[str] = field(default_factory=list)
